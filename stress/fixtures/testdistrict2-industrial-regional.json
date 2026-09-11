@@ -1,0 +1,1250 @@
+{
+  "ruleset_id": "testdistrict2-industrial-regional",
+  "status": "synthetic",
+  "completeness": {
+    "note": "壓力測試用的合成規則集，非官方資料。由金山商業用地規則集等比變換產生（級距×0.8、修正幅度×0.5）。"
+  },
+  "scope": {
+    "district": "測試二區",
+    "land_use": "工業用地",
+    "factor_kind": "regional"
+  },
+  "source": {
+    "doc": "評價基準明細表範例.pdf",
+    "title": "新北市金山區商業用地影響地價區域因素評價基準明細表",
+    "pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "grade_labels": {
+    "2": [
+      "優",
+      "劣"
+    ],
+    "3": [
+      "優",
+      "普通",
+      "劣"
+    ],
+    "5": [
+      "優",
+      "稍優",
+      "普通",
+      "稍劣",
+      "劣"
+    ]
+  },
+  "band_semantics": "min 含、max 不含；absent=true 表示該級距條文含「或無」；in_segment=true 表示該級為「區段內有」，只接受區段內標記、不接受距離（距離 0 會與下一級的「未滿500m」相撞）",
+  "moi_cap_ruleset": "附件24 影響商業用地區域因素評價基準表",
+  "moi_cap_column": "普通商業用地",
+  "moi_cap_column_note": "附件24 的商業用地分高度／中度／普通／村里鄰四欄，本表未載明屬何者。逐項比對結果：在「普通」與「中度」兩欄下 28 項全數合規；在「村里鄰」下有 5 項超標（接近公園 6>3、環境污染 6>4、百貨公司 8>6、大型展示中心 8>6、店舖毗連 12>10）；在「高度」下交流道一項超標（8>5）。依附件24 註3「小地區之商業中心」之定義取「普通商業用地」。此歸類需向地政局確認。",
+  "factors": [
+    {
+      "factor_id": "regional.land_control.urban_plan",
+      "label": "都市計畫（內、外）",
+      "group": "土地使用管制(1)",
+      "grade_count": 2,
+      "max_range": 10.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 10.0
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "都市計畫內"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "都市計畫外"
+            ]
+          }
+        ]
+      },
+      "source_page": 1
+    },
+    {
+      "factor_id": "regional.land_control.zoning",
+      "label": "使用分區(使用地類別)",
+      "group": "土地使用管制(1)",
+      "grade_count": 5,
+      "max_range": 10.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 2.5
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "第二種商業區"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "市場用地"
+            ]
+          },
+          {
+            "grade": 3,
+            "values": [
+              "第二種住宅區"
+            ]
+          },
+          {
+            "grade": 4,
+            "values": [
+              "第一種住宅區"
+            ]
+          },
+          {
+            "grade": 5,
+            "values": [
+              "其他分區"
+            ]
+          }
+        ]
+      },
+      "source_page": 1
+    },
+    {
+      "factor_id": "regional.land_control.building_coverage",
+      "label": "建蔽率",
+      "group": "土地使用管制(1)",
+      "unit": "percent",
+      "grade_count": 5,
+      "max_range": 5.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.25
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 48.0
+          },
+          {
+            "grade": 2,
+            "min": 40.0,
+            "max": 48.0
+          },
+          {
+            "grade": 3,
+            "min": 36.0,
+            "max": 40.0
+          },
+          {
+            "grade": 4,
+            "min": 32.0,
+            "max": 36.0
+          },
+          {
+            "grade": 5,
+            "max": 32.0
+          }
+        ]
+      },
+      "source_page": 1,
+      "note": "與個別因素的建蔽率級距不同（個別：優 80%以上、稍優 70–80%）。70% 在此判優、在個別判稍優，兩者不可共用規則。"
+    },
+    {
+      "factor_id": "regional.land_control.floor_area_ratio",
+      "label": "容積率",
+      "group": "土地使用管制(1)",
+      "unit": "percent",
+      "grade_count": 5,
+      "max_range": 20.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 5.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 192.0
+          },
+          {
+            "grade": 2,
+            "min": 160.0,
+            "max": 192.0
+          },
+          {
+            "grade": 3,
+            "min": 128.0,
+            "max": 160.0
+          },
+          {
+            "grade": 4,
+            "min": 96.0,
+            "max": 128.0
+          },
+          {
+            "grade": 5,
+            "max": 96.0
+          }
+        ]
+      },
+      "source_page": 1,
+      "note": "與個別因素的容積率級距不同（個別：優 300%以上、稍優 240–300%）。240% 在此判優、在個別判稍優。"
+    },
+    {
+      "factor_id": "regional.land_control.build_prohibition",
+      "label": "有無禁止建築",
+      "group": "土地使用管制(1)",
+      "grade_count": 2,
+      "max_range": 20.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 20.0
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "無"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "有"
+            ]
+          }
+        ]
+      },
+      "source_page": 1,
+      "note": "書表上這一項的等級文字印的是「無／有」而不是「優／劣」，二級制。",
+      "grade_labels": [
+        "無",
+        "有"
+      ]
+    },
+    {
+      "factor_id": "regional.land_control.build_restriction",
+      "label": "有無限制建築（整體開發、面積限制、高度限制……等）",
+      "group": "土地使用管制(1)",
+      "grade_count": 2,
+      "max_range": 20.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 20.0
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "無"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "有"
+            ]
+          }
+        ]
+      },
+      "source_page": 1,
+      "grade_labels": [
+        "無",
+        "有"
+      ]
+    },
+    {
+      "factor_id": "regional.transport.main_road_width",
+      "label": "主要道路寬度",
+      "group": "交通運輸(2)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 7.5,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.875
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 24.0
+          },
+          {
+            "grade": 2,
+            "min": 16.0,
+            "max": 24.0
+          },
+          {
+            "grade": 3,
+            "min": 12.0,
+            "max": 16.0
+          },
+          {
+            "grade": 4,
+            "min": 8.0,
+            "max": 12.0
+          },
+          {
+            "grade": 5,
+            "max": 8.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 2
+    },
+    {
+      "factor_id": "regional.transport.avg_road_width",
+      "label": "區段內道路平均寬度",
+      "group": "交通運輸(2)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 5.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.25
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 16.0
+          },
+          {
+            "grade": 2,
+            "min": 12.0,
+            "max": 16.0
+          },
+          {
+            "grade": 3,
+            "min": 8.0,
+            "max": 12.0
+          },
+          {
+            "grade": 4,
+            "min": 4.8,
+            "max": 8.0
+          },
+          {
+            "grade": 5,
+            "max": 4.8,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 2
+    },
+    {
+      "factor_id": "regional.transport.large_station",
+      "label": "接近大型車站之程度",
+      "group": "交通運輸(2)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 5.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.25
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "max": 400.0
+          },
+          {
+            "grade": 2,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 3,
+            "min": 800.0,
+            "max": 1600.0
+          },
+          {
+            "grade": 4,
+            "min": 1600.0,
+            "max": 2400.0
+          },
+          {
+            "grade": 5,
+            "min": 2400.0
+          }
+        ]
+      },
+      "source_page": 2,
+      "note": "條文未載「或無」。本案表1 填國光客運金山站 300m，未觸及缺值情形；若遇「無車站」需人工判定。"
+    },
+    {
+      "factor_id": "regional.transport.bus_stop",
+      "label": "站牌之接近程度或密集程度",
+      "group": "交通運輸(2)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 160.0
+          },
+          {
+            "grade": 3,
+            "min": 160.0,
+            "max": 320.0,
+            "source_defect": "原文誤植為「200km以上未滿400m」。依同列其他級距的單位與級距連續性判定應為 200m。"
+          },
+          {
+            "grade": 4,
+            "min": 320.0,
+            "max": 560.0
+          },
+          {
+            "grade": 5,
+            "min": 560.0
+          }
+        ]
+      },
+      "source_page": 2
+    },
+    {
+      "factor_id": "regional.transport.interchange",
+      "label": "交流道之有無及接近交流道之程度",
+      "group": "交通運輸(2)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "max": 400.0
+          },
+          {
+            "grade": 2,
+            "min": 400.0,
+            "max": 1200.0
+          },
+          {
+            "grade": 3,
+            "min": 1200.0,
+            "max": 2400.0
+          },
+          {
+            "grade": 4,
+            "min": 2400.0,
+            "max": 3600.0
+          },
+          {
+            "grade": 5,
+            "min": 3600.0,
+            "absent": true,
+            "inferred": true,
+            "source_defect": "條文未載「或無」。Golden Case 表1 填「無交流道」、表5-2 填 5 劣，據此反推「無」→ 劣。需向地政局確認。"
+          }
+        ]
+      },
+      "source_page": 2
+    },
+    {
+      "factor_id": "regional.transport.road_development",
+      "label": "區段內道路規劃及闢建程度",
+      "group": "交通運輸(2)",
+      "grade_count": 5,
+      "max_range": 5.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.25
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "已完全開發"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "大部分已完成"
+            ]
+          },
+          {
+            "grade": 3,
+            "values": [
+              "已規劃及闢建中"
+            ]
+          },
+          {
+            "grade": 4,
+            "values": [
+              "已進行規劃"
+            ]
+          },
+          {
+            "grade": 5,
+            "values": [
+              "尚未規劃"
+            ]
+          }
+        ]
+      },
+      "source_page": 2
+    },
+    {
+      "factor_id": "regional.nature.drainage",
+      "label": "排水之良否",
+      "group": "自然條件(3)",
+      "grade_count": 5,
+      "max_range": 5.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.25
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "排水系統完善不曾淹水"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "有排水系統不易淹水"
+            ]
+          },
+          {
+            "grade": 3,
+            "values": [
+              "有排水系統偶有淹水但排水速度快"
+            ]
+          },
+          {
+            "grade": 4,
+            "values": [
+              "有排水系統偶有淹水"
+            ]
+          },
+          {
+            "grade": 5,
+            "values": [
+              "無排水系統易淹水"
+            ]
+          }
+        ]
+      },
+      "source_page": 3
+    },
+    {
+      "factor_id": "regional.nature.terrain",
+      "label": "地勢",
+      "group": "自然條件(3)",
+      "grade_count": 5,
+      "max_range": 5.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.25
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "該區地勢平坦"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "該區大部分地勢平坦"
+            ]
+          },
+          {
+            "grade": 3,
+            "values": [
+              "該區一半地勢平坦"
+            ]
+          },
+          {
+            "grade": 4,
+            "values": [
+              "該區大部分地勢高亢或低窪"
+            ]
+          },
+          {
+            "grade": 5,
+            "values": [
+              "該區全部地勢高亢或低窪"
+            ]
+          }
+        ]
+      },
+      "source_page": 3
+    },
+    {
+      "factor_id": "regional.public.market",
+      "label": "接近市場之程度（傳統市場、超級市場、超大型購物中心）",
+      "group": "公共建設(4)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 3.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 0.75
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 400.0
+          },
+          {
+            "grade": 3,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 4,
+            "min": 800.0,
+            "max": 1440.0
+          },
+          {
+            "grade": 5,
+            "min": 1440.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 3
+    },
+    {
+      "factor_id": "regional.public.park",
+      "label": "接近公園（里鄰公園、一般公園）、廣場、徒步區之程度",
+      "group": "公共建設(4)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 3.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 0.75
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 400.0
+          },
+          {
+            "grade": 3,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 4,
+            "min": 800.0,
+            "max": 1440.0
+          },
+          {
+            "grade": 5,
+            "min": 1440.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 3
+    },
+    {
+      "factor_id": "regional.public.tourism",
+      "label": "接近觀光遊憩設施之程度",
+      "group": "公共建設(4)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 1.5,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 0.375
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 400.0
+          },
+          {
+            "grade": 3,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 4,
+            "min": 800.0,
+            "max": 1200.0,
+            "source_defect": "原文誤植為「1,000km以上未滿1,500m」。依同列其他級距的單位與級距連續性判定應為 1,000m。"
+          },
+          {
+            "grade": 5,
+            "min": 1200.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 3
+    },
+    {
+      "factor_id": "regional.public.parking",
+      "label": "停車場地之便利程度",
+      "group": "公共建設(4)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 2.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 0.5
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 160.0
+          },
+          {
+            "grade": 3,
+            "min": 160.0,
+            "max": 320.0
+          },
+          {
+            "grade": 4,
+            "min": 320.0,
+            "max": 560.0
+          },
+          {
+            "grade": 5,
+            "min": 560.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 3
+    },
+    {
+      "factor_id": "regional.special.utility",
+      "label": "電業設施及公用氣體燃料設施之有無及接近程度",
+      "group": "特殊設施(5)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "farther_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 2400.0,
+            "absent": true,
+            "inferred": true,
+            "source_defect": "條文未載「或無」。此類為嫌惡設施，方向與正面設施相反：沒有設施是最好的情形，故「無」→ 優。需向地政局確認。"
+          },
+          {
+            "grade": 2,
+            "min": 1600.0,
+            "max": 2400.0
+          },
+          {
+            "grade": 3,
+            "min": 800.0,
+            "max": 1600.0
+          },
+          {
+            "grade": 4,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 5,
+            "max": 400.0
+          }
+        ]
+      },
+      "source_page": 4,
+      "note": "Golden Case 佐證多設施取最近：金山變電所 700m（稍劣）與中油金山站 440m（劣），表5-2 填 5 劣，即取較近的 440m。"
+    },
+    {
+      "factor_id": "regional.special.funeral",
+      "label": "殯葬設施之有無及接近程度",
+      "group": "特殊設施(5)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "farther_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 2400.0,
+            "absent": true,
+            "inferred": true,
+            "source_defect": "條文未載「或無」，比照同組其他嫌惡設施處理：「無」→ 優。需向地政局確認。"
+          },
+          {
+            "grade": 2,
+            "min": 1600.0,
+            "max": 2400.0
+          },
+          {
+            "grade": 3,
+            "min": 800.0,
+            "max": 1600.0
+          },
+          {
+            "grade": 4,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 5,
+            "max": 400.0
+          }
+        ]
+      },
+      "source_page": 4,
+      "note": "Golden Case：金山第1公墓 80m 與福緣納骨堂 750m，取較近的 80m → 劣，與表5-2 相符。"
+    },
+    {
+      "factor_id": "regional.special.waste",
+      "label": "廢棄物處理設施之有無及接近程度",
+      "group": "特殊設施(5)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "farther_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 2400.0,
+            "absent": true,
+            "inferred": true,
+            "source_defect": "條文未載「或無」。Golden Case 表1 三個選項全未圈選、名稱皆填「無」，表5-2 填 1 優，據此反推「無」→ 優。需向地政局確認。"
+          },
+          {
+            "grade": 2,
+            "min": 1600.0,
+            "max": 2400.0
+          },
+          {
+            "grade": 3,
+            "min": 800.0,
+            "max": 1600.0
+          },
+          {
+            "grade": 4,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 5,
+            "max": 400.0
+          }
+        ]
+      },
+      "source_page": 4
+    },
+    {
+      "factor_id": "regional.pollution.environmental",
+      "label": "水污染、噪音污染、廢氣污染、廢棄物污染等之有無及接近程度",
+      "group": "環境污染(6)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 3.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 0.75
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "farther_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 2400.0,
+            "absent": true,
+            "inferred": true,
+            "source_defect": "條文未載「或無」。Golden Case 表1 五個污染類型全未圈選、名稱皆填「無」，表5-2 填 1 優，據此反推「無」→ 優。需向地政局確認。"
+          },
+          {
+            "grade": 2,
+            "min": 1600.0,
+            "max": 2400.0
+          },
+          {
+            "grade": 3,
+            "min": 800.0,
+            "max": 1600.0
+          },
+          {
+            "grade": 4,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 5,
+            "max": 400.0
+          }
+        ]
+      },
+      "source_page": 4
+    },
+    {
+      "factor_id": "regional.commerce.department_store",
+      "label": "百貨公司之有無、數量、接近程度",
+      "group": "工商活動(7)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 400.0
+          },
+          {
+            "grade": 3,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 4,
+            "min": 800.0,
+            "max": 1200.0
+          },
+          {
+            "grade": 5,
+            "min": 1200.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 5
+    },
+    {
+      "factor_id": "regional.commerce.financial",
+      "label": "金融機構之有無、數量、接近程度",
+      "group": "工商活動(7)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 2.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 0.5
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 400.0
+          },
+          {
+            "grade": 3,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 4,
+            "min": 800.0,
+            "max": 1200.0
+          },
+          {
+            "grade": 5,
+            "min": 1200.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 5
+    },
+    {
+      "factor_id": "regional.commerce.entertainment",
+      "label": "娛樂設施之有無、數量、接近程度",
+      "group": "工商活動(7)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 2.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 0.5
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 400.0
+          },
+          {
+            "grade": 3,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 4,
+            "min": 800.0,
+            "max": 1200.0
+          },
+          {
+            "grade": 5,
+            "min": 1200.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 5
+    },
+    {
+      "factor_id": "regional.commerce.exhibition_hotel",
+      "label": "大型展示中心或觀光飯店之有無、數量、接近程度",
+      "group": "工商活動(7)",
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.0
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "in_segment": true
+          },
+          {
+            "grade": 2,
+            "max": 400.0
+          },
+          {
+            "grade": 3,
+            "min": 400.0,
+            "max": 800.0
+          },
+          {
+            "grade": 4,
+            "min": 800.0,
+            "max": 1200.0
+          },
+          {
+            "grade": 5,
+            "min": 1200.0,
+            "absent": true
+          }
+        ]
+      },
+      "source_page": 5
+    },
+    {
+      "factor_id": "regional.commerce.customer_traffic",
+      "label": "顧客通行量之多寡",
+      "group": "工商活動(7)",
+      "grade_count": 5,
+      "max_range": 6.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.5
+      },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          {
+            "grade": 1,
+            "values": [
+              "顧客通行量多"
+            ]
+          },
+          {
+            "grade": 2,
+            "values": [
+              "顧客通行量稍多"
+            ]
+          },
+          {
+            "grade": 3,
+            "values": [
+              "顧客通行量普通"
+            ]
+          },
+          {
+            "grade": 4,
+            "values": [
+              "顧客通行量較少"
+            ]
+          },
+          {
+            "grade": 5,
+            "values": [
+              "顧客通行量少"
+            ]
+          }
+        ]
+      },
+      "source_page": 5,
+      "note": "主觀判定項目：由勘查人員現場認定後填入表1，引擎只負責查表，不推論通行量。"
+    },
+    {
+      "factor_id": "regional.commerce.shop_continuity",
+      "label": "店舖之毗連狀態",
+      "group": "工商活動(7)",
+      "unit": "percent",
+      "grade_count": 5,
+      "max_range": 6.0,
+      "matrix": {
+        "kind": "linear_step",
+        "step": 1.5
+      },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          {
+            "grade": 1,
+            "min": 64.0
+          },
+          {
+            "grade": 2,
+            "min": 56.0,
+            "max": 64.0
+          },
+          {
+            "grade": 3,
+            "min": 48.0,
+            "max": 56.0
+          },
+          {
+            "grade": 4,
+            "min": 40.0,
+            "max": 48.0
+          },
+          {
+            "grade": 5,
+            "max": 40.0
+          }
+        ]
+      },
+      "source_page": 5
+    }
+  ]
+}
