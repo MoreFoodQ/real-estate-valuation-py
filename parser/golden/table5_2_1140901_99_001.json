@@ -1,0 +1,104 @@
+{
+  "_source": {
+    "doc": "查估書表範本.pdf",
+    "page": 2,
+    "note": "官方已填範本表5-2。28 個細項的等級逐項與表1（第1頁）左欄的『等級/級數』核對過，全數一致——這正是作業手冊審查重點第 vi 項要求的『修正細項優劣等級與各該地價區段勘查表所載內容一致』。",
+    "why_all_zero": "比準地與比較標的同屬 P002-00 區段，環境條件相同，所以 28 項等級兩兩相同、修正百分比全為 0.00%。這代表本案測不到矩陣查表的正確性（那要靠表4 的 5 個非零修正），但足以驗證等級抽取、群組歸屬與加總邏輯。"
+  },
+  "case_id": "1140901-99-001",
+  "land_use": "商業用地",
+  "benchmark_segment": "P002-00",
+  "comparable_segments": ["P002-00"],
+  "example_nos": ["1"],
+  "groups": [
+    "土地使用管制(1)",
+    "交通運輸(2)",
+    "自然條件(3)",
+    "公共建設(4)",
+    "特殊設施(5)",
+    "環境污染(6)",
+    "工商活動(7)",
+    "其他影響因素(8)"
+  ],
+  "grades": {
+    "regional.land_control.urban_plan": [1, "優"],
+    "regional.land_control.zoning": [1, "優"],
+    "regional.land_control.building_coverage": [1, "優"],
+    "regional.land_control.floor_area_ratio": [1, "優"],
+    "regional.land_control.build_prohibition": [1, "無"],
+    "regional.land_control.build_restriction": [1, "無"],
+    "regional.transport.main_road_width": [3, "普通"],
+    "regional.transport.avg_road_width": [3, "普通"],
+    "regional.transport.large_station": [1, "優"],
+    "regional.transport.bus_stop": [1, "優"],
+    "regional.transport.interchange": [5, "劣"],
+    "regional.transport.road_development": [1, "優"],
+    "regional.nature.drainage": [2, "稍優"],
+    "regional.nature.terrain": [1, "優"],
+    "regional.public.market": [1, "優"],
+    "regional.public.park": [1, "優"],
+    "regional.public.tourism": [1, "優"],
+    "regional.public.parking": [2, "稍優"],
+    "regional.special.utility": [5, "劣"],
+    "regional.special.funeral": [5, "劣"],
+    "regional.special.waste": [1, "優"],
+    "regional.pollution.environmental": [1, "優"],
+    "regional.commerce.department_store": [5, "劣"],
+    "regional.commerce.financial": [2, "稍優"],
+    "regional.commerce.entertainment": [5, "劣"],
+    "regional.commerce.exhibition_hotel": [3, "普通"],
+    "regional.commerce.customer_traffic": [1, "優"],
+    "regional.commerce.shop_continuity": [1, "優"]
+  },
+  "group_membership": {
+    "土地使用管制(1)": [
+      "regional.land_control.urban_plan",
+      "regional.land_control.zoning",
+      "regional.land_control.building_coverage",
+      "regional.land_control.floor_area_ratio",
+      "regional.land_control.build_prohibition",
+      "regional.land_control.build_restriction"
+    ],
+    "交通運輸(2)": [
+      "regional.transport.main_road_width",
+      "regional.transport.avg_road_width",
+      "regional.transport.large_station",
+      "regional.transport.bus_stop",
+      "regional.transport.interchange",
+      "regional.transport.road_development"
+    ],
+    "自然條件(3)": ["regional.nature.drainage", "regional.nature.terrain"],
+    "公共建設(4)": [
+      "regional.public.market",
+      "regional.public.park",
+      "regional.public.tourism",
+      "regional.public.parking"
+    ],
+    "特殊設施(5)": [
+      "regional.special.utility",
+      "regional.special.funeral",
+      "regional.special.waste"
+    ],
+    "環境污染(6)": ["regional.pollution.environmental"],
+    "工商活動(7)": [
+      "regional.commerce.department_store",
+      "regional.commerce.financial",
+      "regional.commerce.entertainment",
+      "regional.commerce.exhibition_hotel",
+      "regional.commerce.customer_traffic",
+      "regional.commerce.shop_continuity"
+    ],
+    "其他影響因素(8)": []
+  },
+  "filed_subtotals": {
+    "土地使用管制(1)": 0,
+    "交通運輸(2)": 0,
+    "自然條件(3)": 0,
+    "公共建設(4)": 0,
+    "特殊設施(5)": 0,
+    "環境污染(6)": 0,
+    "工商活動(7)": 0,
+    "其他影響因素(8)": 0
+  },
+  "filed_total": 0
+}

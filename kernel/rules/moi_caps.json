@@ -1,0 +1,36 @@
+{
+  "caps_id": "moi-individual-factor-caps",
+  "title": "影響地價個別因素評價基準表（內政部最大影響範圍）",
+  "source": {
+    "doc": "土地徵收補償市價查估作業手冊.pdf",
+    "appendix": "附件25",
+    "printed_page": 154,
+    "pdf_page": 158,
+    "issued": "內政部 104年1月30日台內地字第10413006723號令修正發布，自104年3月1日生效"
+  },
+  "legal_basis": "土地徵收補償市價查估辦法第20條第2項；作業手冊 p.52（八）1.：自訂明細表應於內政部所訂最大影響範圍內訂定",
+  "null_means": "「-」表示該項不予考慮調整",
+  "land_uses": ["住宅用地", "商業用地", "工業用地", "農業用地", "其他用地"],
+  "caps": {
+    "individual.parcel.area": { "label": "7.面積", "住宅用地": 10, "商業用地": 10, "工業用地": 10, "農業用地": 10, "其他用地": 10 },
+    "individual.parcel.width": { "label": "8.寬度", "住宅用地": 5, "商業用地": 10, "工業用地": 5, "農業用地": 5, "其他用地": 5 },
+    "individual.parcel.depth": { "label": "9.深度", "住宅用地": 5, "商業用地": 5, "工業用地": 5, "農業用地": 5, "其他用地": 5 },
+    "individual.parcel.shape": { "label": "10.形狀", "住宅用地": 10, "商業用地": 10, "工業用地": 10, "農業用地": 10, "其他用地": 10 },
+    "individual.parcel.street_frontage": { "label": "11.臨街情形", "住宅用地": 30, "商業用地": 30, "工業用地": 20, "農業用地": 5, "其他用地": 15 },
+    "individual.parcel.terrain": { "label": "12.地勢", "住宅用地": 10, "商業用地": 10, "工業用地": 10, "農業用地": 10, "其他用地": 10 },
+    "individual.road.road_type": { "label": "13.道路種類", "住宅用地": 5, "商業用地": 5, "工業用地": 5, "農業用地": 5, "其他用地": 5 },
+    "individual.road.frontage_road_width": { "label": "14.面前道路寬度", "住宅用地": 15, "商業用地": 20, "工業用地": 15, "農業用地": 10, "其他用地": 15 },
+    "individual.proximity.school": { "label": "15.接近學校之程度", "住宅用地": 10, "商業用地": 10, "工業用地": null, "農業用地": null, "其他用地": 10 },
+    "individual.proximity.market": { "label": "16.接近市場之程度", "住宅用地": 10, "商業用地": 10, "工業用地": 10, "農業用地": 10, "其他用地": 10 },
+    "individual.proximity.park": { "label": "17.接近公園、廣場之程度", "住宅用地": 15, "商業用地": 10, "工業用地": null, "農業用地": null, "其他用地": 10 },
+    "individual.proximity.station": { "label": "18.接近車站之程度", "住宅用地": 20, "商業用地": 20, "工業用地": 15, "農業用地": 10, "其他用地": 15 },
+    "individual.proximity.commercial_district": { "label": "19.接近商圈之程度", "住宅用地": 15, "商業用地": 20, "工業用地": null, "農業用地": null, "其他用地": 15 },
+    "individual.surroundings.nuisance": { "label": "20.嫌惡設施", "住宅用地": 10, "商業用地": 10, "工業用地": 10, "農業用地": 10, "其他用地": 10 },
+    "individual.surroundings.parking": { "label": "21.停車方便性", "住宅用地": 5, "商業用地": 15, "工業用地": 5, "農業用地": null, "其他用地": 5 },
+    "individual.admin.zoning": { "label": "22.使用分區或編定用地", "住宅用地": 15, "商業用地": 15, "工業用地": 15, "農業用地": 10, "其他用地": 10 },
+    "individual.admin.building_coverage": { "label": "23.建蔽率", "住宅用地": 10, "商業用地": 10, "工業用地": 10, "農業用地": null, "其他用地": 10 },
+    "individual.admin.floor_area_ratio": { "label": "24.容積率", "住宅用地": 50, "商業用地": 50, "工業用地": 30, "農業用地": null, "其他用地": 30 },
+    "individual.admin.build_restriction": { "label": "25.有無禁限建", "住宅用地": 50, "商業用地": 50, "工業用地": 50, "農業用地": null, "其他用地": 50 },
+    "individual.other": { "label": "6.其他", "住宅用地": 30, "商業用地": 30, "工業用地": 30, "農業用地": 30, "其他用地": 30 }
+  }
+}

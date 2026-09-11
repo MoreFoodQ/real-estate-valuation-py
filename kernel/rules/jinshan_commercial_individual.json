@@ -1,0 +1,431 @@
+{
+  "ruleset_id": "jinshan-commercial-individual",
+  "scope": {
+    "district": "新北市金山區",
+    "land_use": "商業用地",
+    "factor_kind": "individual"
+  },
+  "source": {
+    "doc": "評價基準明細表範例.pdf",
+    "title": "新北市金山區商業用地影響地價個別因素評價基準明細表",
+    "pages": [6, 7, 8, 9]
+  },
+  "grade_labels": {
+    "2": ["優", "劣"],
+    "3": ["優", "普通", "劣"],
+    "5": ["優", "稍優", "普通", "稍劣", "劣"]
+  },
+  "band_semantics": "min 含、max 不含；absent=true 表示該級距條文含「或無」",
+  "moi_cap_ruleset": "moi_caps.json#個別因素.商業用地",
+  "factors": [
+    {
+      "factor_id": "individual.parcel.area",
+      "label": "面積",
+      "group": "1宗地條件",
+      "table4_row": 7,
+      "unit": "m2",
+      "grade_count": 5,
+      "max_range": 8,
+      "matrix": { "kind": "linear_step", "step": 2.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          { "grade": 1, "min": 93 },
+          { "grade": 2, "min": 83, "max": 93 },
+          { "grade": 3, "min": 73, "max": 83 },
+          { "grade": 4, "min": 63, "max": 73 },
+          { "grade": 5, "max": 63 }
+        ]
+      },
+      "source_page": 6
+    },
+    {
+      "factor_id": "individual.parcel.width",
+      "label": "寬度",
+      "group": "1宗地條件",
+      "table4_row": 8,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4,
+      "matrix": { "kind": "linear_step", "step": 1.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          { "grade": 1, "min": 40 },
+          { "grade": 2, "min": 20, "max": 40 },
+          { "grade": 3, "min": 10, "max": 20 },
+          { "grade": 4, "min": 5, "max": 10 },
+          { "grade": 5, "max": 5 }
+        ]
+      },
+      "source_page": 6
+    },
+    {
+      "factor_id": "individual.parcel.depth",
+      "label": "深度",
+      "group": "1宗地條件",
+      "table4_row": 9,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4,
+      "matrix": { "kind": "linear_step", "step": 1.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "optimal_interval",
+        "note": "非單調：40-100m 最優，未滿10m 或 100m以上 皆為劣",
+        "bands": [
+          { "grade": 1, "min": 40, "max": 100 },
+          { "grade": 2, "min": 30, "max": 40 },
+          { "grade": 3, "min": 20, "max": 30 },
+          { "grade": 4, "min": 10, "max": 20 },
+          { "grade": 5, "or_ranges": [{ "max": 10 }, { "min": 100 }] }
+        ]
+      },
+      "source_page": 6
+    },
+    {
+      "factor_id": "individual.parcel.shape",
+      "label": "形狀",
+      "group": "1宗地條件",
+      "table4_row": 10,
+      "grade_count": 2,
+      "max_range": 5,
+      "matrix": { "kind": "linear_step", "step": 5.0 },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          { "grade": 1, "values": ["方形"] },
+          { "grade": 2, "values": ["不規則形"] }
+        ]
+      },
+      "source_page": 6
+    },
+    {
+      "factor_id": "individual.parcel.street_frontage",
+      "label": "臨路情形",
+      "group": "1宗地條件",
+      "table4_row": 11,
+      "grade_count": 5,
+      "max_range": 8,
+      "matrix": { "kind": "linear_step", "step": 2.0 },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          { "grade": 1, "values": ["3面以上臨街", "三面以上臨街", "三面臨街", "四面臨街"] },
+          { "grade": 2, "values": ["路角地"] },
+          { "grade": 3, "values": ["雙面臨街"] },
+          { "grade": 4, "values": ["單面臨街"] },
+          { "grade": 5, "values": ["非臨街地"] }
+        ]
+      },
+      "source_page": 6
+    },
+    {
+      "factor_id": "individual.parcel.terrain",
+      "label": "地勢",
+      "group": "1宗地條件",
+      "table4_row": 12,
+      "grade_count": 3,
+      "max_range": 3,
+      "matrix": { "kind": "linear_step", "step": 1.5 },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "note": "3級因素，證明引擎必須支援動態 N",
+        "categories": [
+          { "grade": 1, "values": ["平坦"] },
+          { "grade": 2, "values": ["緩坡"] },
+          { "grade": 3, "values": ["低窪"] }
+        ]
+      },
+      "source_page": 6
+    },
+    {
+      "factor_id": "individual.road.road_type",
+      "label": "道路種類",
+      "group": "2道路條件",
+      "table4_row": 13,
+      "grade_count": 5,
+      "max_range": 8,
+      "matrix": { "kind": "linear_step", "step": 2.0 },
+      "compliance_note": "本細項 max_range=8 超出內政部附件25『13.道路種類』商業用地上限 5。依查估辦法第20條第2項及作業手冊 p.52，自訂明細表應在內政部最大影響範圍內。validator 只警告不修正，否則無法重現官方 Golden Case 的 +2.00%。",
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          { "grade": 1, "values": ["主要道路"] },
+          { "grade": 2, "values": ["次要道路"] },
+          { "grade": 3, "values": ["巷道"] },
+          { "grade": 4, "values": ["既成巷道"] },
+          { "grade": 5, "values": ["私設巷道"] }
+        ]
+      },
+      "source_page": 7
+    },
+    {
+      "factor_id": "individual.road.frontage_road_width",
+      "label": "面前道路寬度",
+      "group": "2道路條件",
+      "table4_row": 14,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 10,
+      "matrix": { "kind": "linear_step", "step": 2.5 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "bands": [
+          { "grade": 1, "min": 20 },
+          { "grade": 2, "min": 15, "max": 20 },
+          { "grade": 3, "min": 8, "max": 15 },
+          { "grade": 4, "min": 4, "max": 8 },
+          { "grade": 5, "max": 4 }
+        ]
+      },
+      "source_page": 7
+    },
+    {
+      "factor_id": "individual.proximity.school",
+      "label": "接近學校之程度",
+      "group": "3接近條件",
+      "table4_row": 15,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4,
+      "matrix": { "kind": "linear_step", "step": 1.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          { "grade": 1, "max": 200 },
+          { "grade": 2, "min": 200, "max": 600 },
+          { "grade": 3, "min": 600, "max": 1200 },
+          { "grade": 4, "min": 1200, "max": 2000 },
+          { "grade": 5, "min": 2000, "absent": true }
+        ]
+      },
+      "source_page": 7
+    },
+    {
+      "factor_id": "individual.proximity.market",
+      "label": "接近市場之程度",
+      "group": "3接近條件",
+      "table4_row": 16,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 10,
+      "matrix": { "kind": "linear_step", "step": 2.5 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          { "grade": 1, "max": 500 },
+          { "grade": 2, "min": 500, "max": 1000 },
+          { "grade": 3, "min": 1000, "max": 1500 },
+          { "grade": 4, "min": 1500, "max": 2000 },
+          { "grade": 5, "min": 2000, "absent": true }
+        ]
+      },
+      "source_page": 7
+    },
+    {
+      "factor_id": "individual.proximity.park",
+      "label": "接近公園、廣場之程度",
+      "group": "3接近條件",
+      "table4_row": 17,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4,
+      "matrix": { "kind": "linear_step", "step": 1.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          { "grade": 1, "max": 300 },
+          { "grade": 2, "min": 300, "max": 500 },
+          { "grade": 3, "min": 500, "max": 1000 },
+          { "grade": 4, "min": 1000, "max": 1500 },
+          { "grade": 5, "min": 1500, "absent": true }
+        ]
+      },
+      "source_page": 7
+    },
+    {
+      "factor_id": "individual.proximity.station",
+      "label": "接近車站之程度",
+      "group": "3接近條件",
+      "table4_row": 18,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 4,
+      "matrix": { "kind": "linear_step", "step": 1.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          { "grade": 1, "max": 300 },
+          { "grade": 2, "min": 300, "max": 400 },
+          { "grade": 3, "min": 400, "max": 600 },
+          { "grade": 4, "min": 600, "max": 800 },
+          { "grade": 5, "min": 800, "absent": true }
+        ]
+      },
+      "source_page": 7
+    },
+    {
+      "factor_id": "individual.proximity.commercial_district",
+      "label": "接近商圈之程度",
+      "group": "3接近條件",
+      "table4_row": 19,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 8,
+      "matrix": { "kind": "linear_step", "step": 2.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "nearer_is_better",
+        "bands": [
+          { "grade": 1, "max": 500 },
+          { "grade": 2, "min": 500, "max": 1000 },
+          { "grade": 3, "min": 1000, "max": 1800 },
+          { "grade": 4, "min": 1800, "max": 2800 },
+          { "grade": 5, "min": 2800, "absent": true }
+        ]
+      },
+      "source_page": 8
+    },
+    {
+      "factor_id": "individual.surroundings.nuisance",
+      "label": "嫌惡設施之有無",
+      "group": "4周邊環境條件",
+      "table4_row": 20,
+      "unit": "m",
+      "grade_count": 5,
+      "max_range": 6,
+      "matrix": { "kind": "linear_step", "step": 1.5 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "farther_is_better",
+        "note": "方向與接近條件相反：越遠越優，且「無」為最優（條文明文『500m以上或無』）",
+        "aggregation": "worst",
+        "bands": [
+          { "grade": 1, "min": 500, "absent": true },
+          { "grade": 2, "min": 300, "max": 500 },
+          { "grade": 3, "min": 200, "max": 300 },
+          { "grade": 4, "min": 100, "max": 200 },
+          { "grade": 5, "max": 100 }
+        ]
+      },
+      "source_page": 8
+    },
+    {
+      "factor_id": "individual.surroundings.parking",
+      "label": "停車方便性",
+      "group": "4周邊環境條件",
+      "table4_row": 21,
+      "grade_count": 2,
+      "max_range": 2,
+      "matrix": { "kind": "linear_step", "step": 2.0 },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "note": "必須 exact 比對：「可路邊停車」是「不可路邊停車」的子字串，contains 會誤判",
+        "categories": [
+          { "grade": 1, "values": ["可路邊停車"] },
+          { "grade": 2, "values": ["不可路邊停車"] }
+        ]
+      },
+      "source_page": 8
+    },
+    {
+      "factor_id": "individual.admin.zoning",
+      "label": "使用分區或編定",
+      "group": "5行政條件",
+      "table4_row": 22,
+      "grade_count": 5,
+      "max_range": 15,
+      "matrix": { "kind": "linear_step", "step": 3.75 },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "contains",
+        "note": "須 contains：實際填「第二種商業區」須對上「商業區」。關鍵字互不重疊，依 grade 順序首次命中",
+        "categories": [
+          { "grade": 1, "values": ["商業區"] },
+          { "grade": 2, "values": ["住宅區"] },
+          { "grade": 3, "values": ["甲建", "乙建"] },
+          { "grade": 4, "values": ["建地目"] },
+          { "grade": 5, "values": ["已建築用地"] }
+        ]
+      },
+      "source_page": 8
+    },
+    {
+      "factor_id": "individual.admin.building_coverage",
+      "label": "建蔽率",
+      "group": "5行政條件",
+      "table4_row": 23,
+      "unit": "percent",
+      "grade_count": 5,
+      "max_range": 10,
+      "matrix": { "kind": "linear_step", "step": 2.5 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "note": "級距與區域因素『建蔽率』不同（區域：60%以上為優）。70% 在此判稍優、在區域判優，禁止共用規則",
+        "bands": [
+          { "grade": 1, "min": 80 },
+          { "grade": 2, "min": 70, "max": 80 },
+          { "grade": 3, "min": 60, "max": 70 },
+          { "grade": 4, "min": 50, "max": 60 },
+          { "grade": 5, "max": 50 }
+        ]
+      },
+      "source_page": 8
+    },
+    {
+      "factor_id": "individual.admin.floor_area_ratio",
+      "label": "容積率",
+      "group": "5行政條件",
+      "table4_row": 24,
+      "unit": "percent",
+      "grade_count": 5,
+      "max_range": 40,
+      "matrix": { "kind": "linear_step", "step": 10.0 },
+      "classifier": {
+        "type": "numeric_bands",
+        "direction": "higher_is_better",
+        "note": "級距與區域因素『容積率』不同（區域：240%以上為優）。240% 在此判稍優、在區域判優",
+        "bands": [
+          { "grade": 1, "min": 300 },
+          { "grade": 2, "min": 240, "max": 300 },
+          { "grade": 3, "min": 200, "max": 240 },
+          { "grade": 4, "min": 120, "max": 200 },
+          { "grade": 5, "max": 120 }
+        ]
+      },
+      "source_page": 9
+    },
+    {
+      "factor_id": "individual.admin.build_restriction",
+      "label": "有無禁限建",
+      "group": "5行政條件",
+      "table4_row": 25,
+      "grade_count": 2,
+      "max_range": 40,
+      "matrix": { "kind": "linear_step", "step": 40.0 },
+      "classifier": {
+        "type": "ordered_category",
+        "match": "exact",
+        "categories": [
+          { "grade": 1, "values": ["無", "無禁止或限制建築"] },
+          { "grade": 2, "values": ["有", "有禁止或限制建築", "有禁止", "有限制"] }
+        ]
+      },
+      "source_page": 9
+    }
+  ]
+}

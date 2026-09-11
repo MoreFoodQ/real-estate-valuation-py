@@ -1,0 +1,19 @@
+# 辨識層（PDF 文字層、框線與 cell 網格）
+pdfplumber==0.11.10
+# Intel macOS / Python 3.13 可直接使用 universal2 wheel，避免從原始碼編譯 Rust。
+cryptography>=42,<45
+
+# API 層
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+python-multipart==0.0.32
+reportlab>=4.0,<5.0
+
+# 測試
+pytest==9.1.1
+httpx2==2.12.0          # starlette 的 TestClient 需要
+
+# 註：kernel/ 刻意零依賴，只用標準函式庫（Decimal / json / dataclasses）。
+# 上面這些都是 parser/ 與 api/ 才需要的。
+# pdfplumber 會一併帶入 pdfminer.six、Pillow、pypdfium2；
+# pypdfium2 是之後 vision 路徑「PDF 轉影像」要用的，不必另外裝。

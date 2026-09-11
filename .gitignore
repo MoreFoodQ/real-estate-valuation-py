@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+
+# 官方文件不進版控：唯讀證據、共 80MB，且比賽當天會換成官方給的新檔。
+# 位置用 VALUATION_DOC_DIR 指定，見 paths.py。
+*.pdf
+*.docx

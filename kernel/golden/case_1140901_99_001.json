@@ -1,0 +1,126 @@
+{
+  "case_id": "1140901-99-001",
+  "source": {
+    "doc": "查估書表範本.pdf",
+    "tables": { "表1": 1, "表5-2": 2, "表4": 3 },
+    "note": "官方已填範本，作為 Golden Case 使用"
+  },
+  "meta": {
+    "appraisal_base_date": "1140901",
+    "district": "新北市金山區",
+    "land_use": "商業用地",
+    "ruleset_individual": "jinshan-commercial-individual",
+    "ruleset_regional": "jinshan-commercial-regional"
+  },
+  "benchmark": {
+    "label": "比準地",
+    "parcel": "新北市金山區金美段489地號",
+    "segment": "P002-00",
+    "facts": {
+      "individual.parcel.area": 113.21,
+      "individual.parcel.width": 5,
+      "individual.parcel.depth": 23,
+      "individual.parcel.shape": "方形",
+      "individual.parcel.street_frontage": "單面臨街",
+      "individual.parcel.terrain": "平坦",
+      "individual.road.road_type": "主要道路",
+      "individual.road.frontage_road_width": 18,
+      "individual.proximity.school": 150,
+      "individual.proximity.market": 30,
+      "individual.proximity.park": 190,
+      "individual.proximity.station": 80,
+      "individual.proximity.commercial_district": 0,
+      "individual.surroundings.nuisance": 260,
+      "individual.surroundings.parking": "可路邊停車",
+      "individual.admin.zoning": "第二種商業區",
+      "individual.admin.building_coverage": 70,
+      "individual.admin.floor_area_ratio": 240,
+      "individual.admin.build_restriction": "無"
+    },
+    "fact_labels": {
+      "individual.road.frontage_road_width": "中山路 18M",
+      "individual.proximity.school": "金山國小 150M",
+      "individual.proximity.market": "金山市場 30M",
+      "individual.proximity.park": "中山溫泉公園 190M",
+      "individual.proximity.station": "金山區公所站 80M",
+      "individual.proximity.commercial_district": "老街商圈 0M",
+      "individual.surroundings.nuisance": "金山第一公墓 260M"
+    }
+  },
+  "comparables": [
+    {
+      "index": 1,
+      "example_no": "1",
+      "parcel": "新北市金山區溫泉段218地號",
+      "segment": "P002-00",
+      "transaction_date": "114.05.28",
+      "normal_unit_price": 184763,
+      "date_adjustment_pct": 2.0,
+      "date_adjusted_unit_price_displayed": 188459,
+      "regional_adjustment_pct": 0.0,
+      "facts": {
+        "individual.parcel.area": 111.85,
+        "individual.parcel.width": 7,
+        "individual.parcel.depth": 16,
+        "individual.parcel.shape": "方形",
+        "individual.parcel.street_frontage": "單面臨街",
+        "individual.parcel.terrain": "平坦",
+        "individual.road.road_type": "次要道路",
+        "individual.road.frontage_road_width": 6,
+        "individual.proximity.school": 100,
+        "individual.proximity.market": 92,
+        "individual.proximity.park": 200,
+        "individual.proximity.station": 190,
+        "individual.proximity.commercial_district": 0,
+        "individual.surroundings.nuisance": 80,
+        "individual.surroundings.parking": "不可路邊停車",
+        "individual.admin.zoning": "第二種商業區",
+        "individual.admin.building_coverage": 70,
+        "individual.admin.floor_area_ratio": 240,
+        "individual.admin.build_restriction": "無"
+      },
+      "fact_labels": {
+        "individual.road.frontage_road_width": "金包里街 6M",
+        "individual.surroundings.nuisance": "金山第一公墓 80M"
+      },
+      "weight_pct": 100
+    }
+  ],
+  "expected": {
+    "grades": {
+      "individual.parcel.area": [1, 1],
+      "individual.parcel.width": [4, 4],
+      "individual.parcel.depth": [3, 4],
+      "individual.parcel.shape": [1, 1],
+      "individual.parcel.street_frontage": [4, 4],
+      "individual.parcel.terrain": [1, 1],
+      "individual.road.road_type": [1, 2],
+      "individual.road.frontage_road_width": [2, 4],
+      "individual.proximity.school": [1, 1],
+      "individual.proximity.market": [1, 1],
+      "individual.proximity.park": [1, 1],
+      "individual.proximity.station": [1, 1],
+      "individual.proximity.commercial_district": [1, 1],
+      "individual.surroundings.nuisance": [3, 5],
+      "individual.surroundings.parking": [1, 2],
+      "individual.admin.zoning": [1, 1],
+      "individual.admin.building_coverage": [2, 2],
+      "individual.admin.floor_area_ratio": [2, 2],
+      "individual.admin.build_restriction": [1, 1]
+    },
+    "nonzero_corrections": {
+      "individual.parcel.depth": 1.0,
+      "individual.road.road_type": 2.0,
+      "individual.road.frontage_road_width": 5.0,
+      "individual.surroundings.nuisance": 3.0,
+      "individual.surroundings.parking": 2.0
+    },
+    "individual_total_pct": 13.0,
+    "abs_sum_pct": 15.0,
+    "similarity_label": "普通",
+    "trial_price": 212958,
+    "benchmark_comparison_price": 212958,
+    "benchmark_land_price_rounded": 213000,
+    "regional_total_pct": 0.0
+  }
+}
