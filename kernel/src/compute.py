@@ -109,10 +109,10 @@ def trial_price(
     原值必須傳給下游，不可用取整後的值續算。
     """
     raw = (
-        dec(normal_unit_price)
-        * (ONE + dec(date_pct) / HUNDRED)
-        * (ONE + dec(regional_pct) / HUNDRED)
-        * (ONE + dec(individual_pct) / HUNDRED)
+        dec(normal_unit_price, field="表4 土地正常單價")
+        * (ONE + dec(date_pct, field="表4 調整百分率（日期）") / HUNDRED)
+        * (ONE + dec(regional_pct, field="表4 區域因素調整百分率") / HUNDRED)
+        * (ONE + dec(individual_pct, field="表4 個別因素合計") / HUNDRED)
     )
     return round_half_up(raw), raw
 

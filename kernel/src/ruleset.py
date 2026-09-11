@@ -15,11 +15,26 @@ from typing import Any
 RULES_DIR = Path(__file__).resolve().parent.parent / "rules"
 
 
-def dec(x: Any) -> Decimal:
-    """一律經字串轉 Decimal，避免二進位浮點誤差污染修正率與價格。"""
+def dec(x: Any, *, field: str | None = None) -> Decimal:
+    """一律經字串轉 Decimal，避免二進位浮點誤差污染修正率與價格。
+
+    無法解析時一律轉成 ValueError。Decimal 對不合法字串丟的是 InvalidOperation
+    （ArithmeticError 的子類），而 api 層的 except ValueError 接不住它，
+    會一路變成 HTTP 500。/api/compute 與 /api/review 接受用戶端傳來的任意
+    tables，所以這個轉換必須在這裡做——實測 None、""、"無"、"184,763"
+    都會走到這條路。classify.py 對同一個問題已有相同處理。
+    """
     if isinstance(x, Decimal):
         return x
-    return Decimal(str(x))
+    try:
+        return Decimal(str(x))
+    except (ArithmeticError, TypeError, ValueError) as e:
+        where = f"{field}：" if field else ""
+        raise ValueError(
+            f"{where}無法解析為數字的值 {x!r}。"
+            f"若這是從書表讀出來的值，請確認該格是否被誤讀"
+            f"（數字欄位不應含逗號、單位或文字）。"
+        ) from e
 
 
 @dataclass(frozen=True)
