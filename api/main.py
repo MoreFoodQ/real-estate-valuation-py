@@ -31,7 +31,15 @@ from pdfform.fill import FORM_CODES
 from pdfform.forms import FILE_STEMS, build_forms
 
 from .envelope import install_error_handlers, ok
-from .kernel_api import RULES_DIR, appraise_table4, classify, load_ruleset, lookup
+from .kernel_api import (
+    RULES_DIR,
+    appraise_table4,
+    check_ruleset,
+    classify,
+    load_ruleset,
+    lookup,
+    validation_errors,
+)
 from .review import review
 
 PARSERS = {"表1": table1.parse, "表5-2": table5_2.parse, "表4": table4.parse}
@@ -223,13 +231,32 @@ def _require_tables(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def _load(ruleset_id: str):
+    """載入規則集，並在使用前跑一次結構自檢。
+
+    `check_ruleset()` 會抓級距缺口／重疊、矩陣非反對稱、max_range 與矩陣不符
+    等 12 類問題。它原本只在 kernel/demo.py 與測試裡被呼叫，執行期完全沒有
+    防線——壞掉的規則集會靜默載入並產出看起來正常的結果。
+
+    實測：把某細項的級距挖掉一級，`check_ruleset` 報 2 個 ERROR，但 review()
+    仍回報「查 77 格、0 處不符」，因為官方範本剛好沒踩到那個洞。
+    規則集有缺口時不會主動被發現，只有踩到才會——所以這道檢查必須在入口做。
+    """
     try:
-        return load_ruleset(ruleset_id)
+        rs = load_ruleset(ruleset_id)
     except FileNotFoundError:
         available = sorted(p.stem for p in RULES_DIR.glob("*.json"))
         raise HTTPException(
             404, "找不到規則集 %r，可用的有：%s" % (ruleset_id, "、".join(available))
         ) from None
+
+    bad = validation_errors(check_ruleset(rs))
+    if bad:
+        raise HTTPException(
+            500,
+            "規則集 %r 結構有誤，共 %d 項，不予採用（避免算出錯的補償金）：\n%s"
+            % (ruleset_id, len(bad), "\n".join(str(f) for f in bad[:10])),
+        )
+    return rs
 
 
 # 產出的書表暫存在這裡，每次啟動清空。書表是衍生物、不是資料——
@@ -258,8 +285,10 @@ async def generate_forms(file: UploadFile = File(...)) -> dict[str, Any]:
         written = build_forms(
             src,
             work,
-            regional=load_ruleset(DEFAULT_REGIONAL),
-            individual=load_ruleset(DEFAULT_INDIVIDUAL),
+            # 走 _load 而不是 load_ruleset：產表也要吃結構自檢，
+            # 否則壞掉的規則集會被填進「可交件」的官方書表裡。
+            regional=_load(DEFAULT_REGIONAL),
+            individual=_load(DEFAULT_INDIVIDUAL),
             appraise=appraise_table4,
             classify=classify,
             lookup=lookup,
