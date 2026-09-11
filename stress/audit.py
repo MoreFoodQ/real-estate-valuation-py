@@ -247,17 +247,26 @@ def _roundtrip():
 run("E 產表", "parse → fill → render → 再 parse", _roundtrip)
 
 
-def _forms_missing_table():
-    """表4 跨頁時，產表路徑會不會整張跳過？"""
+def _forms_multipage_consistency():
+    """表4 出現在多頁時，產表與辨識兩條路徑是否給出一致的結果？
+
+    修正前：辨識路徑取第一頁繼續跑，產表路徑的 _find 把 LookupError 吞掉
+    導致整張表跳過 → 審查正常但只產出兩張書表。三張書表是交付物，
+    這個落差不能靜默發生。
+    """
     from pdfform.forms import _find
     dup = PAGES + [p for p in PAGES if detect_table(p) == "表4"]
-    found = {c: _find(dup, c) for c in ("表1", "表5-2", "表4")}
+    warns: list[dict] = []
+    found = {c: _find(dup, c, warns) for c in ("表1", "表5-2", "表4")}
     got = {c: (p.number if p else "跳過") for c, p in found.items()}
     api_side = sorted({detect_table(p) for p in dup} - {None})
-    return "產表路徑=%s ／ 辨識路徑=%s（不一致）" % (got, api_side)
+    consistent = set(c for c, v in got.items() if v != "跳過") == set(api_side)
+    return "產表路徑=%s ／ 辨識路徑=%s ／ 一致=%s ／ 警告 %d 則" % (
+        got, api_side, "✅" if consistent else "❌不一致", len(warns),
+    )
 
 
-run("E 產表", "表4 重複出現時，產表 vs 辨識的落差", _forms_missing_table)
+run("E 產表", "表4 出現在多頁時兩條路徑是否一致", _forms_multipage_consistency)
 
 
 # ------------------------------------------------------------------ F 偵測

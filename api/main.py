@@ -281,6 +281,7 @@ async def generate_forms(file: UploadFile = File(...)) -> dict[str, Any]:
     src = work / "input.pdf"
     src.write_bytes(await file.read())
 
+    form_warnings: list[dict[str, Any]] = []
     try:
         written = build_forms(
             src,
@@ -292,6 +293,7 @@ async def generate_forms(file: UploadFile = File(...)) -> dict[str, Any]:
             appraise=appraise_table4,
             classify=classify,
             lookup=lookup,
+            warnings=form_warnings,
         )
     except ValueError as e:
         shutil.rmtree(work, ignore_errors=True)
@@ -310,6 +312,9 @@ async def generate_forms(file: UploadFile = File(...)) -> dict[str, Any]:
                 for code in FORM_CODES
                 if code in written
             ],
+            # 少產出一張書表、或某張表跨頁只取了第一頁，都必須讓使用者知道。
+            # 三張書表是交付物，靜默少一張比報錯更糟。
+            "warnings": form_warnings,
         }
     )
 

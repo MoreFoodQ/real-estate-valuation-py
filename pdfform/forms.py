@@ -11,7 +11,7 @@ from typing import Any
 
 import paths
 from parser import table1, table4, table5_2
-from parser.detect import find_page
+from parser.detect import detect_table
 from parser.extract import Page, load_pages
 
 from . import template
@@ -35,12 +35,16 @@ def build_forms(
     classify,
     lookup,
     source_pdf: str | Path | None = None,
+    warnings: list[dict[str, Any]] | None = None,
 ) -> dict[str, Path]:
     """辨識 `pdf_path`，算完，把三張表填回官方版面並輸出 PDF。
 
     `source_pdf` 是版面來源，預設就用輸入的那份——官方書表的版面在自己
     的檔案裡，沒有理由去別的地方拿。只有輸入本身不是官方版面（例如
     掃描件重建）時才需要指定另一份當版面樣板。
+
+    `warnings` 傳進來的話，會把「取了第一頁」「找不到某張表」之類需要人工
+    知道的事情 append 上去。三張書表是交付物，少一張不能靜默發生。
     """
     pages = load_pages(pdf_path)
     layout_pdf = Path(source_pdf) if source_pdf else Path(pdf_path)
@@ -50,8 +54,16 @@ def build_forms(
     page_no: dict[str, int] = {}
 
     for code, parse in PARSERS.items():
-        page = _find(pages, code)
+        page = _find(pages, code, warnings)
         if page is None:
+            if warnings is not None:
+                warnings.append(
+                    {
+                        "code": "table_not_found",
+                        "table": code,
+                        "message": "這份 PDF 裡找不到 %s，不會產出該張書表。" % code,
+                    }
+                )
             continue
         result = parse(page)
         parsed[code] = result.to_dict()
@@ -92,11 +104,40 @@ def _input_only(code: str, path: str) -> bool:
     return path.startswith(INPUT_ONLY_PREFIXES.get(code, ()))
 
 
-def _find(pages: list[Page], code: str) -> Page | None:
-    try:
-        return find_page(pages, code)
-    except LookupError:
+def _find(
+    pages: list[Page],
+    code: str,
+    warnings: list[dict[str, Any]] | None = None,
+) -> Page | None:
+    """找出某張表所在的那一頁。重複出現時取第一頁並發警告。
+
+    原本的做法是 `find_page()` 加 `except LookupError: return None`，而
+    `find_page` 對「出現在多頁」也是 raise。結果同一份 PDF 裡表4 跨頁時：
+
+      /api/parse  → 取第一頁繼續跑，審查正常
+      /api/forms  → LookupError 被吞掉 → 整張表跳過，只產出兩張書表
+
+    兩條路徑對同一份輸入給出不同結果，而且產表那邊沒有任何訊息說明少了哪張。
+    三張書表是交付物（勘查表須上傳），少一張不能靜默發生。
+
+    現在與 `api/main.py` 的辨識邏輯一致：都取第一頁。跨頁合併是另一件事，
+    需要先有跨頁的實際書表才能做。
+    """
+    hits = [p for p in pages if detect_table(p) == code]
+    if not hits:
         return None
+    if len(hits) > 1 and warnings is not None:
+        warnings.append(
+            {
+                "code": "table_on_multiple_pages",
+                "table": code,
+                "pages": [p.number for p in hits],
+                "message": "%s 出現在第 %s 頁，已採用第 %d 頁。"
+                "若該表實際跨頁，後續頁面的內容不會被讀取，請人工確認。"
+                % (code, "、".join(str(p.number) for p in hits), hits[0].number),
+            }
+        )
+    return hits[0]
 
 
 def default_source() -> Path:
