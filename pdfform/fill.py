@@ -39,6 +39,27 @@ def _num(value: Any) -> str:
     return "{:,.0f}".format(f) if f == int(f) and abs(f) >= 1000 else ("%g" % f)
 
 
+def _fact_text(rs: Any, factor_id: str, value: Any) -> str:
+    """條件欄的顯示字串。百分比型細項要把 `%` 補回去。
+
+    parser 讀「70%」時會解析成數字 70（引擎要的就是數字），但填回書表時
+    只寫 `70` 就與原檔的 `70%` 不一致——那一格在官方書表上是印著百分號的。
+    單位資訊在規則集的 `Factor.unit`，這裡查回來補上。
+
+    只處理 `percent`。`m` 與 `m2` 不補：面積與寬度的單位印在欄位標題
+    （「7面積(M2)」「8寬度(M)」），格子裡本來就只有數字；而面前道路寬度
+    這類「名稱＋距離」的欄位走 fact_labels，不會進到這裡。
+    """
+    text = _num(value)
+    if not text:
+        return text
+    try:
+        unit = rs[factor_id].unit
+    except KeyError:
+        return text
+    return text + "%" if unit == "percent" else text
+
+
 def build_values(
     tables: dict[str, Any],
     regional: Any,
@@ -145,7 +166,9 @@ def _fill_table4(t4, rs, appraise, values: dict[str, str]) -> None:
     )):
         for factor_id, value in side["facts"].items():
             label = side.get("fact_labels", {}).get(factor_id)
-            values["%s.facts.%s" % (prefix, factor_id)] = label or _num(value)
+            values["%s.facts.%s" % (prefix, factor_id)] = label or _fact_text(
+                rs, factor_id, value
+            )
         values["%s.parcel" % prefix] = side.get("parcel") or ""
         values["%s.segment" % prefix] = side.get("segment") or ""
 
