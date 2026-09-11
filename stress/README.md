@@ -15,8 +15,14 @@ cd real-estate-valuation-py-main
 # 產生合成規則集（第一次或改過生成規則時才需要）
 .venv/bin/python -m stress.make_rulesets
 
-# 跑全部壓力測試
+# 產生填錯版本的書表（variants.py 的 A 組與 demo 素材）
+.venv/bin/python -m stress.make_tampered
+
+# 值的變異：61 個案例
 .venv/bin/python -m stress.audit
+
+# 結構的變異：16 個案例
+.venv/bin/python -m stress.variants
 ```
 
 需要官方範本 `docs/official/real-estate-valuation/查估書表範本.pdf`。
@@ -33,6 +39,21 @@ cd real-estate-valuation-py-main
 | E 產表 | parse → fill → render → 再 parse | 自己產出的 PDF 讀不讀得回來 |
 | F 偵測 | 同一張表出現多頁、空頁面清單 | 真實案件表格可能跨頁 |
 | G 自檢 | `validate.check_ruleset()` 抓不抓得到 D 組製造的問題 | 確認既有防線的有效範圍 |
+
+### `variants.py` — 結構的變異
+
+`audit.py` 測「值」，這支測「結構」。重點不是能不能讀到，而是**讀不到時
+怎麼失敗**：大聲失敗（拋例外、發警告、欄位留空）安全，安靜失敗（照樣算出
+看起來合理的答案）是缺陷。輸出只要出現 `SILENT` 就要修。
+
+| 組 | 內容 | 為什麼要測 |
+| --- | --- | --- |
+| A 檔案切法 | 三表分成三檔逐一上傳、只送單張表、無關的 PDF | 官方可能分檔送 |
+| B 欄位位移 | 欄索引整體右移一格 | 書表多一欄時的表現 |
+| C 未收錄細項 | 對照表加入書表上不存在的項目 | 換用地類別會有不同項目 |
+| D 框線門檻 | `EDGE_MIN_SPAN` 掃 100～600 | 框線畫法不同時的容忍範圍 |
+
+結論與調整點索引見 `docs/ROBUSTNESS_AUDIT.md` 第 9、10 節。
 
 ## 合成規則集
 
