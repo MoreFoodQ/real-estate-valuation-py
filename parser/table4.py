@@ -66,6 +66,9 @@ class Table4:
     benchmark: dict[str, Any]
     comparables: list[dict[str, Any]]
     benchmark_comparison_price: float | int | None = None
+    # 找不到的列。表1 與表5-2 早就有 warnings，表4 原本沒有——但表4 是唯一會
+    # 因為一個標籤對不上就整張解析失敗的表，所以它最需要這個欄位。
+    warnings: list[dict[str, Any]] = field(default_factory=list)
     provenance: Provenance = field(default_factory=Provenance)
 
     def to_dict(self) -> dict[str, Any]:
@@ -76,6 +79,7 @@ class Table4:
             "comparables": self.comparables,
             "benchmark_comparison_price": self.benchmark_comparison_price,
             "factor_labels": FACTOR_LABELS,
+            "warnings": self.warnings,
         }
 
 
@@ -254,8 +258,31 @@ def parse(page: Page) -> Table4:
             _parse_comparable(i, cond, diff, y0, y_segment, take, cell, words, row_y, prov, page.number)
         )
 
+    warnings: list[dict[str, Any]] = []
+
     for label, factor_id, kind in FACTOR_ROWS:
-        y = row_y(label)
+        # FACTOR_ROWS 是單一全域清單，不能按用地類別切換。商業用地與農業用地的
+        # 細項本來就不同（農業有灌溉排水、沒有停車方便性），所以「清單裡有、
+        # 書表上沒有」是正常情形，不該讓整張表解析失敗。
+        #
+        # 實測（修正前）：清單多一列書表沒有的名稱，或名稱差一個字
+        # （禁限建 vs 禁建限建），都會 raise LookupError 讓整張表報廢。
+        # 改成跳過並記警告後，一份「商業＋農業＋住宅」的超集清單就能同時
+        # 服務多種用地類別，缺的項目自動落到 review 的 not_checkable。
+        try:
+            y = row_y(label)
+        except LookupError:
+            warnings.append(
+                {
+                    "code": "factor_row_not_found",
+                    "factor_id": factor_id,
+                    "label_in_form": label,
+                    "message": "表4 找不到「%s」這一列，該細項不予辨識。"
+                    "若本案用地類別與規則集不同，這是預期情形。" % label,
+                }
+            )
+            continue
+
         value, text_label = take("benchmark.facts.%s" % factor_id, cols.benchmark, y, kind)
         benchmark["facts"][factor_id] = value
         if text_label:
@@ -277,18 +304,33 @@ def parse(page: Page) -> Table4:
 
     # 比準地比較價格是整張表的結論，印在一個橫跨多欄的合併儲存格裡，
     # 不屬於任何一個比較標的，所以單獨處理。
-    y_bcp = row_y("比準地比較價格")
-    bcp_words = [
-        w
-        for w in words
-        if w.x0 > LABEL_X_MAX and abs(w.y_center - y_bcp) <= 5.0 and _NUM_RE.match(w.text)
-    ]
-    benchmark_comparison_price = _to_number(bcp_words[0].text) if bcp_words else None
-    if bcp_words:
-        prov.record(
-            "benchmark_comparison_price",
-            FieldSource(page.number, bbox_of(bcp_words), bcp_words[0].text),
+    # 這一列是結論值而不是結構，找不到就記警告、值留空，不要整張報廢。
+    # 相對地，上面的「0基本資料」與「地價區段」找不到仍然讓它失敗——
+    # 那兩列缺席代表這頁根本不是表4，繼續解析只會產生垃圾。
+    benchmark_comparison_price = None
+    try:
+        y_bcp = row_y("比準地比較價格")
+    except LookupError:
+        warnings.append(
+            {
+                "code": "row_not_found",
+                "label_in_form": "比準地比較價格",
+                "message": "表4 找不到「比準地比較價格」這一列，無法取得表上的結論價格。"
+                "引擎重算不受影響，但無法與表上填載值比對。",
+            }
         )
+    else:
+        bcp_words = [
+            w
+            for w in words
+            if w.x0 > LABEL_X_MAX and abs(w.y_center - y_bcp) <= 5.0 and _NUM_RE.match(w.text)
+        ]
+        benchmark_comparison_price = _to_number(bcp_words[0].text) if bcp_words else None
+        if bcp_words:
+            prov.record(
+                "benchmark_comparison_price",
+                FieldSource(page.number, bbox_of(bcp_words), bcp_words[0].text),
+            )
 
     return Table4(
         case_id=case_id,
@@ -296,6 +338,7 @@ def parse(page: Page) -> Table4:
         benchmark=benchmark,
         comparables=comparables,
         benchmark_comparison_price=benchmark_comparison_price,
+        warnings=warnings,
         provenance=prov,
     )
 
