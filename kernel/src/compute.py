@@ -117,13 +117,47 @@ def trial_price(
     return round_half_up(raw), raw
 
 
-def benchmark_comparison_price(trials: list[int], weights_pct: list[Decimal]) -> int:
-    """比準地比較價格 = Σ(試算價格 × 權重)，四捨五入至個位數。"""
+# 權重合計的容差。書表上的權重是整數百分比，3 件比較標的各填 33% 就只有
+# 99%——這是估價師的正常填法，不是錯誤。容差內按比例正規化後續算，並發警告；
+# 超出容差才視為填載錯誤。
+WEIGHT_TOLERANCE = Decimal(1)
+
+
+def benchmark_comparison_price(
+    trials: list[int],
+    weights_pct: list[Decimal],
+    *,
+    warnings: list[str] | None = None,
+) -> int:
+    """比準地比較價格 = Σ(試算價格 × 權重)，四捨五入至個位數。
+
+    權重合計不是 100% 時：容差（±1%）內按比例正規化並記錄警告，
+    超出容差才 raise。`warnings` 傳進來就會把訊息 append 上去。
+    """
     if len(trials) != len(weights_pct):
         raise ValueError("試算價格與權重數量不符")
+    if not weights_pct:
+        raise ValueError("沒有比較標的，無法計算比準地比較價格")
+
     tw = sum(weights_pct, Decimal(0))
+    if tw <= 0:
+        raise ValueError(f"權重合計必須為正數，實得 {tw}%")
+
     if tw != HUNDRED:
-        raise ValueError(f"權重合計必須為 100%，實得 {tw}%")
+        if abs(tw - HUNDRED) > WEIGHT_TOLERANCE:
+            raise ValueError(
+                f"權重合計必須為 100%（容差 ±{WEIGHT_TOLERANCE}%），實得 {tw}%。"
+                f"請確認表4 的權重欄是否誤讀或填錯。"
+            )
+        # 容差內：按比例正規化。不直接沿用原權重，否則加總 99% 會讓價格偏低 1%。
+        msg = (
+            f"表4 權重合計為 {tw}%，不是 100%（在 ±{WEIGHT_TOLERANCE}% 容差內）。"
+            f"已按比例正規化後計算，建議人工確認權重欄。"
+        )
+        if warnings is not None:
+            warnings.append(msg)
+        weights_pct = [w * HUNDRED / tw for w in weights_pct]
+
     acc = sum((dec(t) * w / HUNDRED for t, w in zip(trials, weights_pct)), Decimal(0))
     return round_half_up(acc)
 
@@ -230,6 +264,9 @@ class Table4Result:
     comparables: list[ComparableResult]
     benchmark_comparison_price: int
     benchmark_land_price: int
+    # 「算得出來但需要人工確認」的事項。與 raise 的差別：這些不阻擋計算，
+    # 但必須讓審查員看到，不能靜默吞掉。
+    warnings: list[str] = field(default_factory=list)
 
 
 def appraise_table4(
@@ -260,5 +297,8 @@ def appraise_table4(
         for r, w in zip(results, weights_pct):
             r.weight_pct = w
 
-    bcp = benchmark_comparison_price([r.trial_price for r in results], weights_pct)
-    return Table4Result(results, bcp, round_up_by_tier(bcp))
+    warnings: list[str] = []
+    bcp = benchmark_comparison_price(
+        [r.trial_price for r in results], weights_pct, warnings=warnings
+    )
+    return Table4Result(results, bcp, round_up_by_tier(bcp), warnings)

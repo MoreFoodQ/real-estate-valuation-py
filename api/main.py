@@ -193,6 +193,10 @@ def compute(payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
             "comparables": comparables,
             "benchmark_comparison_price": result.benchmark_comparison_price,
             "benchmark_land_price_rounded": result.benchmark_land_price,
+            # 「算得出來但需要人工確認」的事項（例如權重合計不是 100%）。
+            # 不阻擋計算，但不能靜默吞掉——審查工具的可信度建立在
+            # 「有疑慮就說出來」，與 review 的 not_checkable 同一個原則。
+            "warnings": result.warnings,
         }
     )
 
