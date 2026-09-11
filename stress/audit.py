@@ -66,8 +66,14 @@ def base() -> dict:
 
 def rv(t: dict, rr=None) -> str:
     r = review(t, RI, rr or RR)
-    return "verdict=%s 不符=%d 查=%d 查不動=%d" % (
-        r["verdict"], r["finding_count"], r["checked_total"], len(r["not_checkable"]),
+    sanity = r.get("sanity") or []
+    errs = sum(1 for s in sanity if s.get("level") == "error")
+    # 可疑值一定要印出來。合理性檢查存在的理由就是「verdict=match 但輸入不可信」，
+    # 如果報告只看 verdict，這個能力等於沒被測到。
+    tail = " 可疑=%d(error %d)" % (len(sanity), errs) if sanity else ""
+    return "verdict=%s 不符=%d 查=%d 查不動=%d%s" % (
+        r["verdict"], r["finding_count"], r["checked_total"],
+        len(r["not_checkable"]), tail,
     )
 
 
@@ -126,9 +132,7 @@ for label, val in (
         t = base()
         t["表4"]["comparables"][0]["normal_unit_price"] = val
         res = appraise_table4(RI, t["表4"])
-        r = review(t, RI, RR)
-        return "地價=%s verdict=%s 不符=%d" % (
-            res.benchmark_land_price, r["verdict"], r["finding_count"])
+        return "地價=%s ｜ %s" % (res.benchmark_land_price, rv(t))
     run("C 數值", "表4 單價 = %s" % label, _price)
 
 for label, val in (
