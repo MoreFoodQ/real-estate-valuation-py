@@ -14,9 +14,11 @@ import sys
 
 from .detect import detect_table, find_page
 from .extract import load_pages
-from . import table4
+from . import table1, table4, table5_2
 
-PARSERS = {"表4": table4.parse}
+# 三張表的辨識器介面一致（parse(page) -> 具 to_dict() 與 provenance 的
+# dataclass），所以可以用同一個字典驅動。與 api/main.py 的 PARSERS 對齊。
+PARSERS = {"表1": table1.parse, "表5-2": table5_2.parse, "表4": table4.parse}
 
 
 def main(argv: list[str] | None = None) -> int:
