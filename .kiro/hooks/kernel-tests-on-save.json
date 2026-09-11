@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "存檔後跑規則引擎測試",
+      "trigger": "PostFileSave",
+      "description": "修改規則引擎（kernel/ 的 Python 或規則集 JSON）後立即執行 90 個引擎測試。這套測試只花 0.5 秒，因為 kernel 是純邏輯零依賴、不碰 PDF。規則引擎是「每個數字都指得回官方文件」這個主張的核心，改錯會讓所有計算結果失真，所以值得每次存檔都驗。",
+      "matcher": "real-estate-valuation-py-main/kernel/.*\\.(py|json)$",
+      "action": {
+        "type": "command",
+        "command": "cd real-estate-valuation-py-main && .venv/bin/python -m pytest kernel -q",
+        "timeout": 60
+      }
+    }
+  ]
+}

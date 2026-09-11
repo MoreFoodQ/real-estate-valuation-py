@@ -1,7 +1,11 @@
 """外部資料位置。
 
-官方文件與正式程式分開放在工作區根目錄的 ``docs/`` 下；
-也可以用環境變數覆寫，方便部署環境掛載唯讀文件目錄。
+官方文件放在本專案的 ``docs/`` 下，與程式分開但同一個 repo——這樣 clone
+一份就能跑，不必依賴外層目錄結構。也可以用環境變數覆寫，方便部署環境掛載
+唯讀文件目錄。
+
+註：專案原本是 monorepo 的一部分，`docs/` 位於上一層（`ROOT.parent`）。
+拆成獨立 repo 後改為 `ROOT`。這是唯一一處依賴目錄佈局的程式碼。
 """
 
 from __future__ import annotations
@@ -14,7 +18,7 @@ ROOT = Path(__file__).resolve().parent
 DOC_DIR = Path(
     os.environ.get(
         "VALUATION_DOC_DIR",
-        ROOT.parent / "docs" / "official" / "real-estate-valuation",
+        ROOT / "docs" / "official" / "real-estate-valuation",
     )
 ).resolve()
 
