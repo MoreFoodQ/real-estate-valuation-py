@@ -1,16 +1,19 @@
 # 專案結構與分層界線
 
+前後端是兩個獨立的 repo。這份講後端，前端結構見下方。
+
 ```
-智慧城市AI黑客松/
-├── .kiro/                       steering、hooks、specs
-├── docs/                        文件（與程式分開保存）
-│   ├── COMPETITION_BRIEF.md     競賽總覽，先看這份
-│   ├── competition/             題目、環境規範、Access Code
-│   ├── official/                官方書表、評價基準、作業手冊（不進版控）
-│   ├── workshops/               工作坊教材
-│   └── reference/aws/           AWS Well-Architected
-├── real-estate-valuation-main/     前端
-└── real-estate-valuation-py-main/  後端
+real-estate-valuation-py/            後端（本 repo）
+├── .kiro/                           steering、hooks
+├── docs/
+│   ├── ROBUSTNESS_AUDIT.md          穩健性稽核與調整點索引，先看這份
+│   ├── official/                    官方書表、評價基準、作業手冊（不進版控）
+│   ├── workshops/                   工作坊教材
+│   └── reference/aws/               AWS Well-Architected
+├── kernel/  parser/  pdfform/  api/ 四層，見下方分層界線
+└── stress/                          壓力測試
+
+real-estate-valuation/               前端（另一個 repo）
 ```
 
 ---

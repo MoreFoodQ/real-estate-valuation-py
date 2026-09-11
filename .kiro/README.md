@@ -20,7 +20,7 @@ Kiro 在這個專案的使用紀錄。依 2026 新北市 AI 智慧城市黑客�
 | `product.md` | 這個系統在解什麼問題：土地徵收補償查估書表的三層審查。含核心設計主張與已知限制 |
 | `tech.md` | 技術棧、啟動指令、各測試套件實測耗時，以及環境陷阱（node 不在 PATH、e2e 不在 type-check 範圍內） |
 | `structure.md` | 目錄結構、API 端點、分層界線、完整資料流 |
-| `competition.md` | 競賽硬規定，並以 `#[[file:]]` 引用 `docs/COMPETITION_BRIEF.md` 完整版 |
+| `competition.md` | 部署與資料的硬性限制：可用區域、服務白名單、模型限制、憑證處理 |
 
 `tech.md` 與 `structure.md` 記錄的環境陷阱是實際踩過才發現的，例如：
 

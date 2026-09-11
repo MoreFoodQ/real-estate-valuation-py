@@ -1,11 +1,7 @@
-# 競賽限制（違反可能影響資格）
+# 部署與資料的硬性限制
 
-2026 新北市 AI 智慧城市黑客松決賽，組別 `地政team2`。
-競賽期間 2026/9/12–9/13，AWS 環境僅 9/12 08:00 – 9/13 13:00 可用。
-
-完整資訊見 `docs/COMPETITION_BRIEF.md`：
-
-#[[file:docs/COMPETITION_BRIEF.md]]
+本專案的執行環境有幾條不可協商的限制，來自環境提供方的規範。
+動到部署、資料或模型選擇之前先看這裡。
 
 ---
 
@@ -16,8 +12,8 @@
   與路名 —— 一律只用官方範本 `docs/official/real-estate-valuation/查估書表範本.pdf`，
   **不要放真實案件**。
 - 程式碼與 commit **不得含任何憑證**（AWS Access Key、API Token、密碼）。
-  `docs/competition/ACCESS.local.md` 存有競賽 Access Code，根目錄 `.gitignore`
-  已用 `*.local.md` 排除，不要改動這條。
+  憑證一律不寫入任何檔案，需要時直接貼進終端機。根目錄 `.gitignore` 已排除
+  `*.local.md` 與 `*.local` 作為後備防線，不要改動這兩條。
 
 ### 部署
 - 區域限 **`us-east-1`** 或 **`us-west-2`**
@@ -32,8 +28,8 @@
 - Bedrock **每秒最多 1 個請求（1 RPS）**，設計上要避免多輪即時互動
 - 只申請專案直接需要的模型，不用的要撤銷存取權
 
-### Kiro
-- **`/.kiro` 必須存在於專案根目錄**，展示 specs、hooks、steering 的使用情況
+### 專案設定
+- **`/.kiro` 必須留在專案根目錄**，記錄 steering 與 hooks 的設定
 - **不得將 `/.kiro` 或其子資料夾加入 `.gitignore`**
 
 ---
@@ -46,9 +42,8 @@
 若部署為 **Lambda**，每次呼叫可能落在不同執行環境，`POST /api/forms` 產表後
 `GET /api/forms/{token}/{filename}` 會找不到檔案。**必須改存 S3。**
 
-## Demo 風險
+## 示範環境的風險
 
-簡報使用主辦單位的電腦投影，且 AWS 環境在 9/13 13:00 關閉（與交件同時）。
-上台時可能既沒有自己的筆電也沒有雲端環境。
+雲端環境有使用期限，到期後就沒有可運行的部署。示範時也不一定能用自己的電腦。
 
-**優先錄製 demo 影片**，不要把 demo 綁在只能跑 localhost 的環境上。
+**優先錄製操作影片**，不要把示範綁在只能跑 localhost 的環境上。

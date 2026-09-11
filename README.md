@@ -11,14 +11,11 @@
 | **`real-estate-valuation-py`**（本專案） | 規則引擎、書表辨識、產表、API，以及 `docs/` 完整專案文件 |
 | [`real-estate-valuation`](https://github.com/MoreFoodQ/real-estate-valuation) | Vue 3 + TypeScript 前端 |
 
-## 先讀這些文件
+## 先讀這份
 
 | 文件 | 內容 |
 |---|---|
-| [`docs/PROJECT_DECISIONS.md`](docs/PROJECT_DECISIONS.md) | **唯一權威來源。** 已鎖定的決策、官方硬約束、已驗證的實測數字、風險與處置、決策變更紀錄 |
-| [`docs/COMPETITION_BRIEF.md`](docs/COMPETITION_BRIEF.md) | 競賽總覽：時程、命題、評分配比、AWS 服務白名單、資源限制 |
-| [`docs/PITCH_PLAN.md`](docs/PITCH_PLAN.md) | 簡報規劃：實測數字、流程圖、demo 腳本、問答準備 |
-| [`docs/ROBUSTNESS_AUDIT.md`](docs/ROBUSTNESS_AUDIT.md) | 穩健性稽核：61 個壓力測試案例、寫死與彈性規則盤點、修正優先序 |
+| [`docs/ROBUSTNESS_AUDIT.md`](docs/ROBUSTNESS_AUDIT.md) | 穩健性稽核：壓力測試結果、寫死與彈性規則盤點、修正優先序、調整點索引 |
 
 ## 內部分工
 
