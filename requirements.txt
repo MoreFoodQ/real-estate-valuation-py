@@ -2,6 +2,8 @@
 pdfplumber==0.11.10
 # Intel macOS / Python 3.13 可直接使用 universal2 wheel，避免從原始碼編譯 Rust。
 cryptography>=42,<45
+# 官方書表另有 Excel 版（整套 24 張表的空白範本），讀寫 xlsx 需要。
+openpyxl>=3.1,<4.0
 
 # API 層
 fastapi==0.141.1
